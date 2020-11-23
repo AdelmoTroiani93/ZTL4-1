@@ -1,0 +1,23 @@
+{
+  "myZtl4App": {
+    "tipologieVeicoloMTC": {
+      "home": {
+        "title": "Tipologie Veicolo MTCS",
+        "createLabel": "Create a new Tipologie Veicolo MTC",
+        "createOrEditLabel": "Create or edit a Tipologie Veicolo MTC",
+        "notFound": "No Tipologie Veicolo MTCS found"
+      },
+      "created": "A new Tipologie Veicolo MTC is created with identifier {{ param }}",
+      "updated": "A Tipologie Veicolo MTC is updated with identifier {{ param }}",
+      "deleted": "A Tipologie Veicolo MTC is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Tipologie Veicolo MTC {{ id }}?"
+      },
+      "detail": {
+        "title": "Tipologie Veicolo MTC"
+      },
+      "descrizione": "Descrizione",
+      "tipologiaVeicolo": "Tipologia Veicolo"
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "myZtl4App": {
+    "permessoTemporaneo": {
+      "home": {
+        "title": "PermessoTemporaneos",
+        "createLabel": "Genera un nuovo Permesso Temporaneo",
+        "createOrEditLabel": "Genera o modifica un Permesso Temporaneo",
+        "notFound": "No Permesso Temporaneos found"
+      },
+      "created": "&Egrave; stato generato un nuovo Permesso Temporaneo con identificatore {{ param }}",
+      "updated": "&Egrave; stato aggiornato Permesso Temporaneo identificato da {{ param }}",
+      "deleted": "&Egrave; stato eliminato Permesso Temporaneo con identificatore {{ param }}",
+      "delete": {
+        "question": "Sei sicuro di volere eliminare Permesso Temporaneo {{ id }}?"
+      },
+      "detail": {
+        "title": "Permesso Temporaneo"
+      },
+      "targa": "Targa",
+      "targaEstera": "Targa Estera",
+      "domicilioDigitale": "Domicilio Digitale",
+      "tipoPersona": "Tipo Persona",
+      "nomeRichiedente": "Nome Richiedente",
+      "cognomeRichiedente": "Cognome Richiedente",
+      "ragioneSociale": "Ragione Sociale",
+      "codiceFiscaleRichiedente": "Codice Fiscale Richiedente",
+      "partitaIva": "Partita Iva",
+      "dataInizio": "Data Inizio",
+      "impostaDiBollo": "Imposta Di Bollo",
+      "costo": "Costo",
+      "copiaFirmata": "Copia Firmata",
+      "documentoRiconoscimento": "Documento Riconoscimento",
+      "pagato": "Pagato",
+      "protocolloEntrata": "Protocollo Entrata",
+      "protocolloUscita": "Protocollo Uscita",
+      "calendario": "Calendario",
+      "tipoPermesso": "Tipo Permesso",
+      "tipogiaVeicolo": "Tipogia Veicolo",
+      "durata": "Durata",
+      "zona": "Zona",
+      "motivazione": "Motivazione",
+      "autorizzazioni": "Autorizzazioni"
+    }
+  }
+}

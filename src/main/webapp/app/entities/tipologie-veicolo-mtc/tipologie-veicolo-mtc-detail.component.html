@@ -1,0 +1,36 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="tipologieVeicoloMTC">
+            <h2><span jhiTranslate="myZtl4App.tipologieVeicoloMTC.detail.title">Tipologie Veicolo MTC</span> {{ tipologieVeicoloMTC.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="myZtl4App.tipologieVeicoloMTC.descrizione">Descrizione</span></dt>
+                <dd>
+                    <span>{{ tipologieVeicoloMTC.descrizione }}</span>
+                </dd>
+                <dt><span jhiTranslate="myZtl4App.tipologieVeicoloMTC.tipologiaVeicolo">Tipologia Veicolo</span></dt>
+                <dd>
+                    <div *ngIf="tipologieVeicoloMTC.tipologiaVeicolo">
+                        <a [routerLink]="['/tipologia-veicolo', tipologieVeicoloMTC.tipologiaVeicolo?.id, 'view']">{{ tipologieVeicoloMTC.tipologiaVeicolo?.nome }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/tipologie-veicolo-mtc', tipologieVeicoloMTC.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

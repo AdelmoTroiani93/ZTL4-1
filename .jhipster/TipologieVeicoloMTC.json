@@ -1,0 +1,32 @@
+{
+  "name": "TipologieVeicoloMTC",
+  "fields": [
+    {
+      "fieldName": "descrizione",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "tipologiaVeicolo",
+      "otherEntityRelationshipName": "tipologieVeicoloMTC",
+      "relationshipName": "tipologiaVeicolo",
+      "otherEntityField": "nome"
+    }
+  ],
+  "changelogDate": "20201123121832",
+  "entityTableName": "tipologie_veicolo_mtc",
+  "dto": "no",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

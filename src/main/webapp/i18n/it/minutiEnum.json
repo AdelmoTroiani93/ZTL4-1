@@ -1,0 +1,11 @@
+{
+  "myZtl4App": {
+    "MinutiEnum": {
+      "null": "",
+      "ZERO": "00",
+      "QUINDICI": "15",
+      "TRENTA": "30",
+      "QUARANTACINQUE": "45"
+    }
+  }
+}
