@@ -15,7 +15,7 @@ type EntityArrayResponseType = HttpResponse<IPermessoTemporaneo[]>;
 @Injectable({ providedIn: 'root' })
 export class PermessoTemporaneoService {
   public resourceUrl = SERVER_API_URL + 'api/permesso-temporaneos';
-
+  public resurcVeicolo="http://localhost:3000/veicolo?targa";
   constructor(protected http: HttpClient) {}
 
   create(permessoTemporaneo: IPermessoTemporaneo): Observable<EntityResponseType> {
@@ -47,6 +47,11 @@ export class PermessoTemporaneoService {
 
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  getTipologiaveicolo(targa:String) : Observable<HttpResponse<{}>>{
+    return this.http.get(this.resurcVeicolo+"="+targa, { observe: 'response' });
+    
   }
 
   protected convertDateFromClient(permessoTemporaneo: IPermessoTemporaneo): IPermessoTemporaneo {

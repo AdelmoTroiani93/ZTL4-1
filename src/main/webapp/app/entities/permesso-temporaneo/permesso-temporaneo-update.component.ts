@@ -86,8 +86,11 @@ export class PermessoTemporaneoUpdateComponent implements OnInit {
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
-
+  prova():void{
+console.log( this.editForm.get('tipoPersona')?.value)
+  }
   ngOnInit(): void {
+    this.editForm.get('tipoPersona')?.setValue('FISICA');
     this.activatedRoute.data.subscribe(({ permessoTemporaneo }) => {
       this.updateForm(permessoTemporaneo);
 
@@ -159,6 +162,22 @@ export class PermessoTemporaneoUpdateComponent implements OnInit {
       motivazione: permessoTemporaneo.motivazione,
       autorizzazionis: permessoTemporaneo.autorizzazionis,
     });
+  }
+
+  
+  inputTarga():void{
+    if( this.editForm.get("targa")?.value.length===7){
+      this.permessoTemporaneoService.getTipologiaveicolo(this.editForm.get("targa")?.value).subscribe(data=>{
+        console.log(data)
+        try{
+          this.editForm.get("tipogiaVeicolo")?.setValue(data['body']?.[0]['tipologia'])
+          
+        }catch(e){console.log(e)
+         }
+      })
+    }else{
+      this.editForm.get("tipogiaVeicolo")?.setValue(null)
+    }
   }
 
   byteSize(base64String: string): string {

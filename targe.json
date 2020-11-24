@@ -1,0 +1,10 @@
+{
+    "veicolo": [
+      { "id": 1, "targa": "3745847", "tipologia": "autoveicolo" },
+      { "id": 2, "targa": "4345454", "tipologia": "autoveicolo 3mt" },
+      { "id": 3, "targa": "4545642", "tipologia": "autoveicolo" },
+      { "id": 4, "targa": "4455544", "tipologia": "autoveicolo 4mt" },
+      { "id": 5, "targa": "4545454", "tipologia": "autoveicolo" }
+    ]
+
+  }

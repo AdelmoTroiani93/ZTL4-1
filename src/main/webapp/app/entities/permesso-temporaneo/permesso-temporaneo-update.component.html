@@ -13,7 +13,7 @@
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.targa" for="field_targa">Targa</label>
-                    <input type="text" class="form-control" name="targa" id="field_targa"
+                    <input type="text" class="form-control" name="targa" id="field_targa" (input)=inputTarga()
                            formControlName="targa"/>
                     <div *ngIf="editForm.get('targa')!.invalid && (editForm.get('targa')!.dirty || editForm.get('targa')!.touched)">
                         <small class="form-text text-danger"
@@ -26,7 +26,10 @@
                         </small>
                     </div>
                 </div>
-
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.tipogiaVeicolo" for="field_tipogiaVeicolo">Tipogia Veicolo</label>
+                    <input class="form-control" id="field_tipogiaVeicolo" name="tipogiaVeicolo" formControlName="tipogiaVeicolo"  disabled>
+                </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.targaEstera" for="field_targaEstera">Targa Estera</label>
                     <input type="checkbox" class="form-control" name="targaEstera" id="field_targaEstera"
@@ -51,12 +54,12 @@
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.tipoPersona" for="field_tipoPersona">Tipo Persona</label>
-                    <select class="form-control" name="tipoPersona" formControlName="tipoPersona" id="field_tipoPersona">
+                    <select class="form-control" name="tipoPersona" formControlName="tipoPersona" (change)=prova() id="field_tipoPersona">
                         <option value="FISICA">{{ 'myZtl4App.TipoPersona.FISICA' | translate }}</option>
                         <option value="GIURIDICA">{{ 'myZtl4App.TipoPersona.GIURIDICA' | translate }}</option>
                     </select>
                 </div>
-
+                <div *ngIf="editForm.get('tipoPersona')?.value==='FISICA'">
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.nomeRichiedente" for="field_nomeRichiedente">Nome Richiedente</label>
                     <input type="text" class="form-control" name="nomeRichiedente" id="field_nomeRichiedente"
@@ -70,23 +73,26 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.codiceFiscaleRichiedente" for="field_codiceFiscaleRichiedente">Codice Fiscale Richiedente</label>
+                    <input type="text" class="form-control" name="codiceFiscaleRichiedente" id="field_codiceFiscaleRichiedente"
+                           formControlName="codiceFiscaleRichiedente"/>
+                </div>
+            </div>
+            <div *ngIf="editForm.get('tipoPersona')?.value==='GIURIDICA'">
+                <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.ragioneSociale" for="field_ragioneSociale">Ragione Sociale</label>
                     <input type="text" class="form-control" name="ragioneSociale" id="field_ragioneSociale"
                            formControlName="ragioneSociale"/>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.codiceFiscaleRichiedente" for="field_codiceFiscaleRichiedente">Codice Fiscale Richiedente</label>
-                    <input type="text" class="form-control" name="codiceFiscaleRichiedente" id="field_codiceFiscaleRichiedente"
-                           formControlName="codiceFiscaleRichiedente"/>
-                </div>
+              
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.partitaIva" for="field_partitaIva">Partita Iva</label>
                     <input type="text" class="form-control" name="partitaIva" id="field_partitaIva"
                            formControlName="partitaIva"/>
                 </div>
-
+            </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.dataInizio" for="field_dataInizio">Data Inizio</label>
                     <div class="input-group">
@@ -181,13 +187,7 @@
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.tipogiaVeicolo" for="field_tipogiaVeicolo">Tipogia Veicolo</label>
-                    <select class="form-control" id="field_tipogiaVeicolo" name="tipogiaVeicolo" formControlName="tipogiaVeicolo">
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="tipologiaVeicoloOption.id === editForm.get('tipogiaVeicolo')!.value?.id ? editForm.get('tipogiaVeicolo')!.value : tipologiaVeicoloOption" *ngFor="let tipologiaVeicoloOption of tipologiaveicolos; trackBy: trackById">{{ tipologiaVeicoloOption.nome }}</option>
-                    </select>
-                </div>
+                
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.durata" for="field_durata">Durata</label>
