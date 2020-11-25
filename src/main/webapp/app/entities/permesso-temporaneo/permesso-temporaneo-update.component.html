@@ -26,10 +26,12 @@
                         </small>
                     </div>
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.tipogiaVeicolo" for="field_tipogiaVeicolo">Tipogia Veicolo</label>
-                    <input class="form-control" id="field_tipogiaVeicolo" name="tipogiaVeicolo" formControlName="tipogiaVeicolo"  disabled>
-                </div>
+                    <input class="form-control"  readonly id="field_tipogiaVeicolo" name="tipogiaVeicolo" formControlName="tipogiaVeicolo"  >
+                </div> -->
+                {{this.editForm.get('tipogiaVeicolo')?.value}}
+                
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.targaEstera" for="field_targaEstera">Targa Estera</label>
                     <input type="checkbox" class="form-control" name="targaEstera" id="field_targaEstera"
@@ -54,7 +56,7 @@
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.tipoPersona" for="field_tipoPersona">Tipo Persona</label>
-                    <select class="form-control" name="tipoPersona" formControlName="tipoPersona" (change)=prova() id="field_tipoPersona">
+                    <select class="form-control" name="tipoPersona" formControlName="tipoPersona" id="field_tipoPersona">
                         <option value="FISICA">{{ 'myZtl4App.TipoPersona.FISICA' | translate }}</option>
                         <option value="GIURIDICA">{{ 'myZtl4App.TipoPersona.GIURIDICA' | translate }}</option>
                     </select>
@@ -103,16 +105,14 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.impostaDiBollo" for="field_impostaDiBollo">Imposta Di Bollo</label>
-                    <input type="checkbox" class="form-control" name="impostaDiBollo" id="field_impostaDiBollo"
-                           formControlName="impostaDiBollo"/>
-                </div>
+               
+
+                COSTO:{{this.costoDurataZona+this.valore}}
 
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.costo" for="field_costo">Costo</label>
-                    <input type="number" class="form-control" name="costo" id="field_costo"
-                           formControlName="costo"/>
+                    <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.impostaDiBollo" for="field_impostaDiBollo">Imposta Di Bollo</label>
+                    <input type="checkbox" class="form-control" name="impostaDiBollo" id="field_impostaDiBollo" (click)="isImpostaBollo()"
+                           formControlName="impostaDiBollo"/>
                 </div>
 
                 <div class="form-group">
@@ -191,7 +191,7 @@
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.durata" for="field_durata">Durata</label>
-                    <select class="form-control" id="field_durata" name="durata" formControlName="durata">
+                    <select class="form-control" id="field_durata" name="durata" formControlName="durata" (change)=cambioDurata()>
                         <option [ngValue]="null"></option>
                         <option [ngValue]="durataCostoOption.id === editForm.get('durata')!.value?.id ? editForm.get('durata')!.value : durataCostoOption" *ngFor="let durataCostoOption of duratacostos; trackBy: trackById">{{ durataCostoOption.durata }}</option>
                     </select>
@@ -199,12 +199,58 @@
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.zona" for="field_zona">Zona</label>
-                    <select class="form-control" id="field_zona" name="zona" formControlName="zona">
+                    <select class="form-control" id="field_zona" name="zona" formControlName="zona" (change)=cambioZona()>
                         <option [ngValue]="null"></option>
                         <option [ngValue]="zonaOption.id === editForm.get('zona')!.value?.id ? editForm.get('zona')!.value : zonaOption" *ngFor="let zonaOption of zonas; trackBy: trackById">{{ zonaOption.nome }}</option>
                     </select>
                 </div>
-
+                <ng-template #content let-modal>
+                    <div class="modal-header">
+                      <h4 class="modal-title" id="modal-basic-title">ZONA:  {{this.editForm.get("zona")?.value['tipologiaZona']['nome']}}</h4>
+                      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        <div *ngIf="this.editForm.get('zona')?.value!=null">
+                        <div *ngFor="let orarioZona of orario">
+                            <div  *ngIf="orarioZona.lunedi">
+                                Lunedi
+                            </div>
+                            <div  *ngIf="orarioZona.martedi">
+                                Martedi
+                            </div>
+                            <div  *ngIf="orarioZona.mercoledi">
+                                Mercoledi
+                            </div>
+                            <div  *ngIf="orarioZona.giovedi">
+                                Giovedi
+                            </div>
+                            <div  *ngIf="orarioZona.venerdi">
+                                Venerdi
+                            </div>
+                            <div  *ngIf="orarioZona.sabato">
+                                Sabato
+                            </div>
+                            <div  *ngIf="orarioZona.domenica">
+                                Domenica
+                            </div>
+                            Ora Inizio:
+                            {{orarioZona.oraInizio}} :  {{orarioZona.minutiInizio}}
+                            <br>
+                            Ora Fine:
+                            {{orarioZona.oraFine}} :  {{orarioZona.minutiFine}}
+                            <hr>
+                        </div>
+                    </div>
+                    </div>
+                  </ng-template>
+                  <div *ngIf="this.editForm.get('zona')?.value!=null">
+                  <button class="btn btn-lg btn-outline-primary" (click)="open(content)">Informazioni</button>
+                  </div>
+                  <hr>
+            
+      
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.motivazione" for="field_motivazione">Motivazione</label>
                     <select class="form-control" id="field_motivazione" name="motivazione" formControlName="motivazione">

@@ -97,6 +97,7 @@ export class ZonaComponent implements OnInit, OnDestroy {
   }
 
   protected onSuccess(data: IZona[] | null, headers: HttpHeaders, page: number, navigate: boolean): void {
+    
     this.totalItems = Number(headers.get('X-Total-Count'));
     this.page = page;
     if (navigate) {
@@ -109,6 +110,7 @@ export class ZonaComponent implements OnInit, OnDestroy {
       });
     }
     this.zonas = data || [];
+ 
     this.ngbPaginationPage = this.page;
   }
 

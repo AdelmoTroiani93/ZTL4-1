@@ -24,7 +24,9 @@ import { IMotivazione } from 'app/shared/model/motivazione.model';
 import { MotivazioneService } from 'app/entities/motivazione/motivazione.service';
 import { IAutorizzazione } from 'app/shared/model/autorizzazione.model';
 import { AutorizzazioneService } from 'app/entities/autorizzazione/autorizzazione.service';
-
+import { ProfiloOrarioService} from '../profilo-orario/profilo-orario.service';
+import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {GruppoVarchiService} from '../gruppo-varchi/gruppo-varchi.service'
 type SelectableEntity = ICalendarizzazione | ITipologiaPermesso | ITipologiaVeicolo | IDurataCosto | IZona | IMotivazione | IAutorizzazione;
 
 @Component({
@@ -40,8 +42,10 @@ export class PermessoTemporaneoUpdateComponent implements OnInit {
   zonas: IZona[] = [];
   motivaziones: IMotivazione[] = [];
   autorizzaziones: IAutorizzazione[] = [];
-  dataInizioDp: any;
-
+  closeResult = '';
+  orario:any=[]
+  public costoDurataZona!: number;
+  valore=0
   editForm = this.fb.group({
     id: [],
     targa: [null, [Validators.required, Validators.maxLength(10)]],
@@ -84,13 +88,42 @@ export class PermessoTemporaneoUpdateComponent implements OnInit {
     protected motivazioneService: MotivazioneService,
     protected autorizzazioneService: AutorizzazioneService,
     protected activatedRoute: ActivatedRoute,
+    protected profiloOrarioService:ProfiloOrarioService,
+    protected gruppoVarchiService: GruppoVarchiService,
+    private modalService: NgbModal,
     private fb: FormBuilder
   ) {}
-  prova():void{
-console.log( this.editForm.get('tipoPersona')?.value)
+
+  open(content:any):void {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
   }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
+  
+  isImpostaBollo():void{
+    this.costoDurataZona=0;
+console.log(!this.editForm.get('impostaDiBollo')?.value)
+if(!this.editForm.get('impostaDiBollo')?.value){
+  this.costoDurataZona+=18;
+}else{
+  this.costoDurataZona+=0;
+}
+  }
+
   ngOnInit(): void {
-    this.editForm.get('tipoPersona')?.setValue('FISICA');
+    this.costoDurataZona=0
     this.activatedRoute.data.subscribe(({ permessoTemporaneo }) => {
       this.updateForm(permessoTemporaneo);
 
@@ -130,8 +163,42 @@ console.log( this.editForm.get('tipoPersona')?.value)
 
       this.autorizzazioneService.query().subscribe((res: HttpResponse<IAutorizzazione[]>) => (this.autorizzaziones = res.body || []));
     });
+    this.editForm.get('costo')?.setValue(0)
+    this.editForm.get('tipoPersona')?.setValue('FISICA')
   }
 
+
+
+
+  cambioDurata():void{
+    
+    console.log(this.editForm.get('durata')?.value)
+    try{
+    this.valore=this.editForm.get('durata')?.value['costo'];
+    }catch(e){
+      this.valore=0
+    }
+    }
+    
+
+
+
+
+  cambioZona():void{
+    console.log(this.editForm.get("zona")?.value)
+this.profiloOrarioService.find(this.editForm.get("zona")?.value['profiloOrario']['id']).subscribe(data=>{
+  console.log(data['body']?.['regolaOrarias'])
+  this.orario=data['body']?.['regolaOrarias']
+})
+
+  //TODO
+  // this.gruppoVarchiService.find(this.editForm.get("zona")?.value['id']).subscribe(data=>{
+  //  console.log(data)
+  // })
+
+  }
+
+ 
   updateForm(permessoTemporaneo: IPermessoTemporaneo): void {
     this.editForm.patchValue({
       id: permessoTemporaneo.id,

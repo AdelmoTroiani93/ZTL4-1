@@ -31,6 +31,7 @@
   },
   "defaultProject": "my-ztl-4",
   "cli": {
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "analytics": "ceefb537-e484-44d0-b7ed-db1e71418f89"
   }
 }
