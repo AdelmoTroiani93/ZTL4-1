@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -34,6 +33,8 @@ type SelectableEntity = ICalendarizzazione | ITipologiaPermesso | ITipologiaVeic
   templateUrl: './permesso-temporaneo-update.component.html',
 })
 export class PermessoTemporaneoUpdateComponent implements OnInit {
+  isTarga=false;
+  isLinear = false;
   isSaving = false;
   calendarios: ICalendarizzazione[] = [];
   tipologiapermessos: ITipologiaPermesso[] = [];
@@ -44,12 +45,15 @@ export class PermessoTemporaneoUpdateComponent implements OnInit {
   autorizzaziones: IAutorizzazione[] = [];
   closeResult = '';
   orario:any=[]
+  varchi:any=[]
   public costoDurataZona!: number;
   valore=0
-  editForm = this.fb.group({
-    id: [],
+
+  formStep1=this.fb.group({
     targa: [null, [Validators.required, Validators.maxLength(10)]],
     targaEstera: [],
+  })
+  formStep2 = this.fb.group({
     domicilioDigitale: [null, [Validators.required, Validators.maxLength(50)]],
     tipoPersona: [],
     nomeRichiedente: [],
@@ -75,6 +79,9 @@ export class PermessoTemporaneoUpdateComponent implements OnInit {
     motivazione: [],
     autorizzazionis: [],
   });
+
+
+
 
   constructor(
     protected dataUtils: JhiDataUtils,
@@ -114,8 +121,8 @@ export class PermessoTemporaneoUpdateComponent implements OnInit {
   
   isImpostaBollo():void{
     this.costoDurataZona=0;
-console.log(!this.editForm.get('impostaDiBollo')?.value)
-if(!this.editForm.get('impostaDiBollo')?.value){
+console.log(!this.formStep2.get('impostaDiBollo')?.value)
+if(!this.formStep2.get('impostaDiBollo')?.value){
   this.costoDurataZona+=18;
 }else{
   this.costoDurataZona+=0;
@@ -163,8 +170,8 @@ if(!this.editForm.get('impostaDiBollo')?.value){
 
       this.autorizzazioneService.query().subscribe((res: HttpResponse<IAutorizzazione[]>) => (this.autorizzaziones = res.body || []));
     });
-    this.editForm.get('costo')?.setValue(0)
-    this.editForm.get('tipoPersona')?.setValue('FISICA')
+    this.formStep2.get('costo')?.setValue(0)
+    this.formStep2.get('tipoPersona')?.setValue('FISICA')
   }
 
 
@@ -172,9 +179,9 @@ if(!this.editForm.get('impostaDiBollo')?.value){
 
   cambioDurata():void{
     
-    console.log(this.editForm.get('durata')?.value)
+    console.log(this.formStep2.get('durata')?.value)
     try{
-    this.valore=this.editForm.get('durata')?.value['costo'];
+    this.valore=this.formStep2.get('durata')?.value['costo'];
     }catch(e){
       this.valore=0
     }
@@ -185,14 +192,18 @@ if(!this.editForm.get('impostaDiBollo')?.value){
 
 
   cambioZona():void{
-    console.log(this.editForm.get("zona")?.value)
-this.profiloOrarioService.find(this.editForm.get("zona")?.value['profiloOrario']['id']).subscribe(data=>{
-  console.log(data['body']?.['regolaOrarias'])
+    console.log(this.formStep2.get("zona")?.value)
+    try{
+this.profiloOrarioService.find(this.formStep2.get("zona")?.value['profiloOrario']['id']).subscribe(data=>{
   this.orario=data['body']?.['regolaOrarias']
 })
-
+this.zonaService.find(this.formStep2.get("zona")?.value['id']).subscribe(data=>{
+  this.varchi=data['body']?.['gruppoVarchis']
+})
+    }
+    catch(e){console.log(e)}
   //TODO
-  // this.gruppoVarchiService.find(this.editForm.get("zona")?.value['id']).subscribe(data=>{
+  // this.gruppoVarchiService.find(this.formStep2.get("zona")?.value['id']).subscribe(data=>{
   //  console.log(data)
   // })
 
@@ -200,7 +211,7 @@ this.profiloOrarioService.find(this.editForm.get("zona")?.value['profiloOrario']
 
  
   updateForm(permessoTemporaneo: IPermessoTemporaneo): void {
-    this.editForm.patchValue({
+    this.formStep2.patchValue({
       id: permessoTemporaneo.id,
       targa: permessoTemporaneo.targa,
       targaEstera: permessoTemporaneo.targaEstera,
@@ -233,17 +244,25 @@ this.profiloOrarioService.find(this.editForm.get("zona")?.value['profiloOrario']
 
   
   inputTarga():void{
-    if( this.editForm.get("targa")?.value.length===7){
-      this.permessoTemporaneoService.getTipologiaveicolo(this.editForm.get("targa")?.value).subscribe(data=>{
+    this.isTarga=false;
+    if( this.formStep1.get("targa")?.value.length===7){
+      this.permessoTemporaneoService.getTipologiaveicolo(this.formStep1.get("targa")?.value).subscribe(data=>{
         console.log(data)
         try{
-          this.editForm.get("tipogiaVeicolo")?.setValue(data['body']?.[0]['tipologia'])
-          
-        }catch(e){console.log(e)
-         }
+        if(data['body']?.[0]['tipologia']!==null){
+          this.formStep1.get("tipogiaVeicolo")?.setValue(data['body']?.[0]['tipologia'])
+          this.isTarga=true;
+          console.log(this.isTarga)
+        }else{
+          this.isTarga=false;
+        }
+      }catch(e){
+        console.log(e)
+      }
       })
     }else{
-      this.editForm.get("tipogiaVeicolo")?.setValue(null)
+      this.isTarga=false;
+      this.formStep1.get("tipogiaVeicolo")?.setValue(null)
     }
   }
 
@@ -256,7 +275,7 @@ this.profiloOrarioService.find(this.editForm.get("zona")?.value['profiloOrario']
   }
 
   setFileData(event: any, field: string, isImage: boolean): void {
-    this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe(null, (err: JhiFileLoadError) => {
+    this.dataUtils.loadFileToForm(event, this.formStep2, field, isImage).subscribe(null, (err: JhiFileLoadError) => {
       this.eventManager.broadcast(
         new JhiEventWithContent<AlertError>('myZtl4App.error', { ...err, key: 'error.file.' + err.key })
       );
@@ -267,46 +286,52 @@ this.profiloOrarioService.find(this.editForm.get("zona")?.value['profiloOrario']
     window.history.back();
   }
 
-  save(): void {
-    this.isSaving = true;
-    const permessoTemporaneo = this.createFromForm();
-    if (permessoTemporaneo.id !== undefined) {
-      this.subscribeToSaveResponse(this.permessoTemporaneoService.update(permessoTemporaneo));
-    } else {
-      this.subscribeToSaveResponse(this.permessoTemporaneoService.create(permessoTemporaneo));
+  step(): void {
+    if(this.formStep2.invalid){
+      return
     }
+    this.isSaving = true;
+    
+  
   }
-
+  save(): void {
+  const permessoTemporaneo = this.createFromForm();
+  if (permessoTemporaneo.id !== undefined) {
+    this.subscribeToSaveResponse(this.permessoTemporaneoService.update(permessoTemporaneo));
+  } else {
+    this.subscribeToSaveResponse(this.permessoTemporaneoService.create(permessoTemporaneo));
+  }
+  }
   private createFromForm(): IPermessoTemporaneo {
     return {
       ...new PermessoTemporaneo(),
-      id: this.editForm.get(['id'])!.value,
-      targa: this.editForm.get(['targa'])!.value,
-      targaEstera: this.editForm.get(['targaEstera'])!.value,
-      domicilioDigitale: this.editForm.get(['domicilioDigitale'])!.value,
-      tipoPersona: this.editForm.get(['tipoPersona'])!.value,
-      nomeRichiedente: this.editForm.get(['nomeRichiedente'])!.value,
-      cognomeRichiedente: this.editForm.get(['cognomeRichiedente'])!.value,
-      ragioneSociale: this.editForm.get(['ragioneSociale'])!.value,
-      codiceFiscaleRichiedente: this.editForm.get(['codiceFiscaleRichiedente'])!.value,
-      partitaIva: this.editForm.get(['partitaIva'])!.value,
-      dataInizio: this.editForm.get(['dataInizio'])!.value,
-      impostaDiBollo: this.editForm.get(['impostaDiBollo'])!.value,
-      costo: this.editForm.get(['costo'])!.value,
-      copiaFirmataContentType: this.editForm.get(['copiaFirmataContentType'])!.value,
-      copiaFirmata: this.editForm.get(['copiaFirmata'])!.value,
-      documentoRiconoscimentoContentType: this.editForm.get(['documentoRiconoscimentoContentType'])!.value,
-      documentoRiconoscimento: this.editForm.get(['documentoRiconoscimento'])!.value,
-      pagato: this.editForm.get(['pagato'])!.value,
-      protocolloEntrata: this.editForm.get(['protocolloEntrata'])!.value,
-      protocolloUscita: this.editForm.get(['protocolloUscita'])!.value,
-      calendario: this.editForm.get(['calendario'])!.value,
-      tipoPermesso: this.editForm.get(['tipoPermesso'])!.value,
-      tipogiaVeicolo: this.editForm.get(['tipogiaVeicolo'])!.value,
-      durata: this.editForm.get(['durata'])!.value,
-      zona: this.editForm.get(['zona'])!.value,
-      motivazione: this.editForm.get(['motivazione'])!.value,
-      autorizzazionis: this.editForm.get(['autorizzazionis'])!.value,
+      id: this.formStep2.get(['id'])!.value,
+      targa: this.formStep2.get(['targa'])!.value,
+      targaEstera: this.formStep2.get(['targaEstera'])!.value,
+      domicilioDigitale: this.formStep2.get(['domicilioDigitale'])!.value,
+      tipoPersona: this.formStep2.get(['tipoPersona'])!.value,
+      nomeRichiedente: this.formStep2.get(['nomeRichiedente'])!.value,
+      cognomeRichiedente: this.formStep2.get(['cognomeRichiedente'])!.value,
+      ragioneSociale: this.formStep2.get(['ragioneSociale'])!.value,
+      codiceFiscaleRichiedente: this.formStep2.get(['codiceFiscaleRichiedente'])!.value,
+      partitaIva: this.formStep2.get(['partitaIva'])!.value,
+      dataInizio: this.formStep2.get(['dataInizio'])!.value,
+      impostaDiBollo: this.formStep2.get(['impostaDiBollo'])!.value,
+      costo: this.formStep2.get(['costo'])!.value,
+      copiaFirmataContentType: this.formStep2.get(['copiaFirmataContentType'])!.value,
+      copiaFirmata: this.formStep2.get(['copiaFirmata'])!.value,
+      documentoRiconoscimentoContentType: this.formStep2.get(['documentoRiconoscimentoContentType'])!.value,
+      documentoRiconoscimento: this.formStep2.get(['documentoRiconoscimento'])!.value,
+      pagato: this.formStep2.get(['pagato'])!.value,
+      protocolloEntrata: this.formStep2.get(['protocolloEntrata'])!.value,
+      protocolloUscita: this.formStep2.get(['protocolloUscita'])!.value,
+      calendario: this.formStep2.get(['calendario'])!.value,
+      tipoPermesso: this.formStep2.get(['tipoPermesso'])!.value,
+      tipogiaVeicolo: this.formStep2.get(['tipogiaVeicolo'])!.value,
+      durata: this.formStep2.get(['durata'])!.value,
+      zona: this.formStep2.get(['zona'])!.value,
+      motivazione: this.formStep2.get(['motivazione'])!.value,
+      autorizzazionis: this.formStep2.get(['autorizzazionis'])!.value,
     };
   }
 

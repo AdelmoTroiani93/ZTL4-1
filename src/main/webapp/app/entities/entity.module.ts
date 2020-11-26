@@ -63,11 +63,7 @@ import { RouterModule } from '@angular/router';
       {
         path: 'permesso-temporaneo',
         loadChildren: () => import('./permesso-temporaneo/permesso-temporaneo.module').then(m => m.MyZtl4PermessoTemporaneoModule),
-      },
-      {
-        path: 'calendario',
-        loadChildren: () => import('./profilo-orario/Calendario/calendario-module').then(m => m.DemoModule),
-      },
+      }
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

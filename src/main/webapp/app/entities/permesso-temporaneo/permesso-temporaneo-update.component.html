@@ -1,54 +1,53 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+       
+        <form name="formStep1" role="form" novalidate [formGroup]="formStep1">
             <h2 id="jhi-permesso-temporaneo-heading" jhiTranslate="myZtl4App.permessoTemporaneo.home.createOrEditLabel">Create or edit a Permesso Temporaneo</h2>
 
             <div>
                 <jhi-alert-error></jhi-alert-error>
 
-                <div class="form-group" [hidden]="!editForm.get('id')!.value">
-                    <label for="id" jhiTranslate="global.field.id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
-                </div>
-
+               
+     <div class="row">
+         <div class="col-8">
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.targa" for="field_targa">Targa</label>
                     <input type="text" class="form-control" name="targa" id="field_targa" (input)=inputTarga()
                            formControlName="targa"/>
-                    <div *ngIf="editForm.get('targa')!.invalid && (editForm.get('targa')!.dirty || editForm.get('targa')!.touched)">
+                    <div *ngIf="formStep1.get('targa')!.invalid && (formStep1.get('targa')!.dirty || formStep1.get('targa')!.touched)">
                         <small class="form-text text-danger"
-                               *ngIf="editForm.get('targa')?.errors?.required" jhiTranslate="entity.validation.required">
+                               *ngIf="formStep1.get('targa')?.errors?.required" jhiTranslate="entity.validation.required">
                         This field is required.
                         </small>
                         <small class="form-text text-danger"
-                               *ngIf="editForm.get('targa')?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 10 }">
+                               *ngIf="formStep1.get('targa')?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 10 }">
                         This field cannot be longer than 10 characters.
                         </small>
                     </div>
                 </div>
-                <!-- <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.tipogiaVeicolo" for="field_tipogiaVeicolo">Tipogia Veicolo</label>
-                    <input class="form-control"  readonly id="field_tipogiaVeicolo" name="tipogiaVeicolo" formControlName="tipogiaVeicolo"  >
-                </div> -->
-                {{this.editForm.get('tipogiaVeicolo')?.value}}
-                
+            </div>
+            <div class="col-4">
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.targaEstera" for="field_targaEstera">Targa Estera</label>
                     <input type="checkbox" class="form-control" name="targaEstera" id="field_targaEstera"
                            formControlName="targaEstera"/>
                 </div>
-
+            </div>
+        </div>
+    </form>
+    <form name="formStep2" role="form" novalidate [formGroup]="formStep2">
+                <div *ngIf="isTarga==true">
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.domicilioDigitale" for="field_domicilioDigitale">Domicilio Digitale</label>
                     <input type="text" class="form-control" name="domicilioDigitale" id="field_domicilioDigitale"
                            formControlName="domicilioDigitale"/>
-                    <div *ngIf="editForm.get('domicilioDigitale')!.invalid && (editForm.get('domicilioDigitale')!.dirty || editForm.get('domicilioDigitale')!.touched)">
+                    <div *ngIf="formStep2.get('domicilioDigitale')!.invalid && (formStep2.get('domicilioDigitale')!.dirty || formStep2.get('domicilioDigitale')!.touched)">
                         <small class="form-text text-danger"
-                               *ngIf="editForm.get('domicilioDigitale')?.errors?.required" jhiTranslate="entity.validation.required">
+                               *ngIf="formStep2.get('domicilioDigitale')?.errors?.required" jhiTranslate="entity.validation.required">
                         This field is required.
                         </small>
                         <small class="form-text text-danger"
-                               *ngIf="editForm.get('domicilioDigitale')?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 50 }">
+                               *ngIf="formStep2.get('domicilioDigitale')?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 50 }">
                         This field cannot be longer than 50 characters.
                         </small>
                     </div>
@@ -61,7 +60,7 @@
                         <option value="GIURIDICA">{{ 'myZtl4App.TipoPersona.GIURIDICA' | translate }}</option>
                     </select>
                 </div>
-                <div *ngIf="editForm.get('tipoPersona')?.value==='FISICA'">
+                <div *ngIf="formStep2.get('tipoPersona')?.value==='FISICA'">
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.nomeRichiedente" for="field_nomeRichiedente">Nome Richiedente</label>
                     <input type="text" class="form-control" name="nomeRichiedente" id="field_nomeRichiedente"
@@ -80,7 +79,7 @@
                            formControlName="codiceFiscaleRichiedente"/>
                 </div>
             </div>
-            <div *ngIf="editForm.get('tipoPersona')?.value==='GIURIDICA'">
+            <div *ngIf="formStep2.get('tipoPersona')?.value==='GIURIDICA'">
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.ragioneSociale" for="field_ragioneSociale">Ragione Sociale</label>
                     <input type="text" class="form-control" name="ragioneSociale" id="field_ragioneSociale"
@@ -115,43 +114,7 @@
                            formControlName="impostaDiBollo"/>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.copiaFirmata" for="field_copiaFirmata">Copia Firmata</label>
-                    <div>
-                        <div *ngIf="editForm.get('copiaFirmata')!.value" class="form-text text-danger clearfix">
-                            <a class="pull-left" (click)="openFile(editForm.get('copiaFirmataContentType')!.value, editForm.get('copiaFirmata')!.value)" jhiTranslate="entity.action.open">open</a><br>
-                            <span class="pull-left">{{ editForm.get('copiaFirmataContentType')!.value }}, {{ byteSize(editForm.get('copiaFirmata')!.value) }}</span>
-                            <button type="button" (click)="editForm.patchValue({copiaFirmata: null});editForm.patchValue({copiaFirmataContentType: null});"
-                                    class="btn btn-secondary btn-xs pull-right">
-                                <fa-icon icon="times"></fa-icon>
-                            </button>
-                        </div>
-                        <input type="file" id="file_copiaFirmata" (change)="setFileData($event, 'copiaFirmata', false)" jhiTranslate="entity.action.addblob"/>
-                    </div>
-                    <input type="hidden" class="form-control" name="copiaFirmata" id="field_copiaFirmata"
-                           formControlName="copiaFirmata"/>
-                    <input type="hidden" class="form-control" name="copiaFirmataContentType" id="field_copiaFirmataContentType"
-                           formControlName="copiaFirmataContentType" />
-                </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.documentoRiconoscimento" for="field_documentoRiconoscimento">Documento Riconoscimento</label>
-                    <div>
-                        <div *ngIf="editForm.get('documentoRiconoscimento')!.value" class="form-text text-danger clearfix">
-                            <a class="pull-left" (click)="openFile(editForm.get('documentoRiconoscimentoContentType')!.value, editForm.get('documentoRiconoscimento')!.value)" jhiTranslate="entity.action.open">open</a><br>
-                            <span class="pull-left">{{ editForm.get('documentoRiconoscimentoContentType')!.value }}, {{ byteSize(editForm.get('documentoRiconoscimento')!.value) }}</span>
-                            <button type="button" (click)="editForm.patchValue({documentoRiconoscimento: null});editForm.patchValue({documentoRiconoscimentoContentType: null});"
-                                    class="btn btn-secondary btn-xs pull-right">
-                                <fa-icon icon="times"></fa-icon>
-                            </button>
-                        </div>
-                        <input type="file" id="file_documentoRiconoscimento" (change)="setFileData($event, 'documentoRiconoscimento', false)" jhiTranslate="entity.action.addblob"/>
-                    </div>
-                    <input type="hidden" class="form-control" name="documentoRiconoscimento" id="field_documentoRiconoscimento"
-                           formControlName="documentoRiconoscimento"/>
-                    <input type="hidden" class="form-control" name="documentoRiconoscimentoContentType" id="field_documentoRiconoscimentoContentType"
-                           formControlName="documentoRiconoscimentoContentType" />
-                </div>
+           
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.pagato" for="field_pagato">Pagato</label>
@@ -175,7 +138,7 @@
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.calendario" for="field_calendario">Calendario</label>
                     <select class="form-control" id="field_calendario" name="calendario" formControlName="calendario">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="calendarizzazioneOption.id === editForm.get('calendario')!.value?.id ? editForm.get('calendario')!.value : calendarizzazioneOption" *ngFor="let calendarizzazioneOption of calendarios; trackBy: trackById">{{ calendarizzazioneOption.id }}</option>
+                        <option [ngValue]="calendarizzazioneOption.id === formStep2.get('calendario')!.value?.id ? formStep2.get('calendario')!.value : calendarizzazioneOption" *ngFor="let calendarizzazioneOption of calendarios; trackBy: trackById">{{ calendarizzazioneOption.id }}</option>
                     </select>
                 </div>
 
@@ -183,7 +146,7 @@
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.tipoPermesso" for="field_tipoPermesso">Tipo Permesso</label>
                     <select class="form-control" id="field_tipoPermesso" name="tipoPermesso" formControlName="tipoPermesso">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="tipologiaPermessoOption.id === editForm.get('tipoPermesso')!.value?.id ? editForm.get('tipoPermesso')!.value : tipologiaPermessoOption" *ngFor="let tipologiaPermessoOption of tipologiapermessos; trackBy: trackById">{{ tipologiaPermessoOption.nome }}</option>
+                        <option [ngValue]="tipologiaPermessoOption.id === formStep2.get('tipoPermesso')!.value?.id ? formStep2.get('tipoPermesso')!.value : tipologiaPermessoOption" *ngFor="let tipologiaPermessoOption of tipologiapermessos; trackBy: trackById">{{ tipologiaPermessoOption.nome }}</option>
                     </select>
                 </div>
 
@@ -193,7 +156,7 @@
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.durata" for="field_durata">Durata</label>
                     <select class="form-control" id="field_durata" name="durata" formControlName="durata" (change)=cambioDurata()>
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="durataCostoOption.id === editForm.get('durata')!.value?.id ? editForm.get('durata')!.value : durataCostoOption" *ngFor="let durataCostoOption of duratacostos; trackBy: trackById">{{ durataCostoOption.durata }}</option>
+                        <option [ngValue]="durataCostoOption.id === formStep2.get('durata')!.value?.id ? formStep2.get('durata')!.value : durataCostoOption" *ngFor="let durataCostoOption of duratacostos; trackBy: trackById">{{ durataCostoOption.durata }}</option>
                     </select>
                 </div>
 
@@ -201,18 +164,21 @@
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.zona" for="field_zona">Zona</label>
                     <select class="form-control" id="field_zona" name="zona" formControlName="zona" (change)=cambioZona()>
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="zonaOption.id === editForm.get('zona')!.value?.id ? editForm.get('zona')!.value : zonaOption" *ngFor="let zonaOption of zonas; trackBy: trackById">{{ zonaOption.nome }}</option>
+                        <option [ngValue]="zonaOption.id === formStep2.get('zona')!.value?.id ? formStep2.get('zona')!.value : zonaOption" *ngFor="let zonaOption of zonas; trackBy: trackById">{{ zonaOption.nome }}</option>
                     </select>
                 </div>
                 <ng-template #content let-modal>
                     <div class="modal-header">
-                      <h4 class="modal-title" id="modal-basic-title">ZONA:  {{this.editForm.get("zona")?.value['tipologiaZona']['nome']}}</h4>
+                      <h4 class="modal-title" id="modal-basic-title">ZONA:  {{this.formStep2.get("zona")?.value['tipologiaZona']['nome']}}</h4>
                       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
                     <div class="modal-body">
-                        <div *ngIf="this.editForm.get('zona')?.value!=null">
+                        <div *ngIf="this.formStep2.get('zona')?.value!=null">
+                        <div *ngFor="let gruppoVarchi of varchi">
+                            {{gruppoVarchi.nome}}
+                        </div>
                         <div *ngFor="let orarioZona of orario">
                             <div  *ngIf="orarioZona.lunedi">
                                 Lunedi
@@ -245,7 +211,7 @@
                     </div>
                     </div>
                   </ng-template>
-                  <div *ngIf="this.editForm.get('zona')?.value!=null">
+                  <div *ngIf="this.formStep2.get('zona')?.value!=null">
                   <button class="btn btn-lg btn-outline-primary" (click)="open(content)">Informazioni</button>
                   </div>
                   <hr>
@@ -255,27 +221,68 @@
                     <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.motivazione" for="field_motivazione">Motivazione</label>
                     <select class="form-control" id="field_motivazione" name="motivazione" formControlName="motivazione">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="motivazioneOption.id === editForm.get('motivazione')!.value?.id ? editForm.get('motivazione')!.value : motivazioneOption" *ngFor="let motivazioneOption of motivaziones; trackBy: trackById">{{ motivazioneOption.descrizione }}</option>
+                        <option [ngValue]="motivazioneOption.id === formStep2.get('motivazione')!.value?.id ? formStep2.get('motivazione')!.value : motivazioneOption" *ngFor="let motivazioneOption of motivaziones; trackBy: trackById">{{ motivazioneOption.descrizione }}</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label jhiTranslate="myZtl4App.permessoTemporaneo.autorizzazioni" for="field_autorizzazionis">Autorizzazioni</label>
                     <select class="form-control" id="field_autorizzazionis" multiple name="autorizzazionis" formControlName="autorizzazionis">
-                        <option [ngValue]="getSelected(editForm.get('autorizzazionis')!.value, autorizzazioneOption)" *ngFor="let autorizzazioneOption of autorizzaziones; trackBy: trackById">{{ autorizzazioneOption.nome }}</option>
+                        <option [ngValue]="getSelected(formStep2.get('autorizzazionis')!.value, autorizzazioneOption)" *ngFor="let autorizzazioneOption of autorizzaziones; trackBy: trackById">{{ autorizzazioneOption.nome }}</option>
                     </select>
                 </div>
+
+                <div>
+                    <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                        <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                    </button>
+    
+                    <button type="submit" id="save-entity" [disabled]="formStep2.invalid || isSaving" class="btn btn-primary">
+                        <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Stampa</span>
+                    </button>
+                </div>
+            </div>
+            <div *ngIf=" this.isSaving">
+            <div class="form-group">
+                <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.copiaFirmata" for="field_copiaFirmata">Copia Firmata</label>
+                <div>
+                    <div *ngIf="formStep2.get('copiaFirmata')!.value" class="form-text text-danger clearfix">
+                        <a class="pull-left" (click)="openFile(formStep2.get('copiaFirmataContentType')!.value, formStep2.get('copiaFirmata')!.value)" jhiTranslate="entity.action.open">open</a><br>
+                        <span class="pull-left">{{ formStep2.get('copiaFirmataContentType')!.value }}, {{ byteSize(formStep2.get('copiaFirmata')!.value) }}</span>
+                        <button type="button" (click)="formStep2.patchValue({copiaFirmata: null});formStep2.patchValue({copiaFirmataContentType: null});"
+                                class="btn btn-secondary btn-xs pull-right">
+                            <fa-icon icon="times"></fa-icon>
+                        </button>
+                    </div>
+                    <input type="file" id="file_copiaFirmata" (change)="setFileData($event, 'copiaFirmata', false)" jhiTranslate="entity.action.addblob"/>
+                </div>
+                <input type="hidden" class="form-control" name="copiaFirmata" id="field_copiaFirmata"
+                       formControlName="copiaFirmata"/>
+                <input type="hidden" class="form-control" name="copiaFirmataContentType" id="field_copiaFirmataContentType"
+                       formControlName="copiaFirmataContentType" />
             </div>
 
-            <div>
-                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
-                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
-                </button>
-
-                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
-                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
-                </button>
+            <div class="form-group">
+                <label class="form-control-label" jhiTranslate="myZtl4App.permessoTemporaneo.documentoRiconoscimento" for="field_documentoRiconoscimento">Documento Riconoscimento</label>
+                <div>
+                    <div *ngIf="formStep2.get('documentoRiconoscimento')!.value" class="form-text text-danger clearfix">
+                        <a class="pull-left" (click)="openFile(formStep2.get('documentoRiconoscimentoContentType')!.value, formStep2.get('documentoRiconoscimento')!.value)" jhiTranslate="entity.action.open">open</a><br>
+                        <span class="pull-left">{{ formStep2.get('documentoRiconoscimentoContentType')!.value }}, {{ byteSize(formStep2.get('documentoRiconoscimento')!.value) }}</span>
+                        <button type="button" (click)="formStep2.patchValue({documentoRiconoscimento: null});formStep2.patchValue({documentoRiconoscimentoContentType: null});"
+                                class="btn btn-secondary btn-xs pull-right">
+                            <fa-icon icon="times"></fa-icon>
+                        </button>
+                    </div>
+                    <input type="file" id="file_documentoRiconoscimento" (change)="setFileData($event, 'documentoRiconoscimento', false)" jhiTranslate="entity.action.addblob"/>
+                </div>
+                <input type="hidden" class="form-control" name="documentoRiconoscimento" id="field_documentoRiconoscimento"
+                       formControlName="documentoRiconoscimento"/>
+                <input type="hidden" class="form-control" name="documentoRiconoscimentoContentType" id="field_documentoRiconoscimentoContentType"
+                       formControlName="documentoRiconoscimentoContentType" />
             </div>
-        </form>
+        </div>
+    </form>
+        </div>
+     
     </div>
 </div>

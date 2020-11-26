@@ -7,9 +7,20 @@ import { PermessoTemporaneoDetailComponent } from './permesso-temporaneo-detail.
 import { PermessoTemporaneoUpdateComponent } from './permesso-temporaneo-update.component';
 import { PermessoTemporaneoDeleteDialogComponent } from './permesso-temporaneo-delete-dialog.component';
 import { permessoTemporaneoRoute } from './permesso-temporaneo.route';
+import {MatStepperModule} from '@angular/material/stepper';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
-  imports: [MyZtl4SharedModule, RouterModule.forChild(permessoTemporaneoRoute)],
+  imports: [MyZtl4SharedModule, RouterModule.forChild(permessoTemporaneoRoute),
+
+    MatStepperModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
+
+    ],
   declarations: [
     PermessoTemporaneoComponent,
     PermessoTemporaneoDetailComponent,

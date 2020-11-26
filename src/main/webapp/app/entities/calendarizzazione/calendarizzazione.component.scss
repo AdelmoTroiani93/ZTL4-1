@@ -1,0 +1,10 @@
+.container {
+    display: grid ;
+    grid-template-columns:  10% 10% 10% 10% 10% 10% 10%;
+    grid-template-rows: 5vw 5vw 5vw 5vw;
+    justify-content: center; 
+  }
+
+  .item{
+      border-style:solid;
+  }
